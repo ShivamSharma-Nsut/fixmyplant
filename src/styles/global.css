@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@theme {
+  --color-sage-50: #f6f8f6;
+  --color-sage-100: #e8ede8;
+  --color-sage-200: #d1dbd1;
+  --color-sage-300: #aabfa9;
+  --color-sage-400: #7d9d7b;
+  --color-sage-500: #4f7942;
+  --color-sage-600: #3f6135;
+  --color-sage-700: #334d2b;
+  --color-sage-800: #2b4024;
+  --color-sage-900: #24351f;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}

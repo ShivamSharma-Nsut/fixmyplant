@@ -1,0 +1,267 @@
+---
+---
+
+<div class="bg-white rounded-2xl shadow-lg p-8 max-w-3xl mx-auto border border-sage-200">
+  <h2 class="text-3xl font-bold text-sage-700 mb-6">Plant Diagnostic Tool</h2>
+  <p class="text-gray-600 mb-8">Answer three quick questions to diagnose your plant's issues</p>
+
+  <div id="quiz-container">
+    <div id="step-1" class="quiz-step">
+      <label class="block text-lg font-semibold text-gray-800 mb-3">
+        Step 1: Select Your Plant
+      </label>
+      <div class="relative">
+        <input
+          type="text"
+          id="quiz-plant-search"
+          placeholder="Start typing plant name..."
+          class="w-full px-4 py-3 border-2 border-sage-300 rounded-lg focus:outline-none focus:border-sage-500 focus:ring-2 focus:ring-sage-200"
+          autocomplete="off"
+        />
+        <div
+          id="quiz-search-results"
+          class="absolute z-40 w-full mt-2 bg-white border-2 border-sage-200 rounded-lg shadow-xl hidden max-h-60 overflow-y-auto"
+        >
+        </div>
+      </div>
+      <div id="selected-plant" class="mt-4 hidden">
+        <div class="flex items-center gap-3 p-3 bg-sage-50 rounded-lg border border-sage-200">
+          <img id="selected-plant-img" src="" alt="" class="w-12 h-12 object-cover rounded-lg" />
+          <div>
+            <div id="selected-plant-name" class="font-semibold text-gray-900"></div>
+            <div id="selected-plant-scientific" class="text-sm text-gray-500 italic"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="step-2" class="quiz-step hidden mt-6">
+      <label class="block text-lg font-semibold text-gray-800 mb-3">
+        Step 2: What symptoms do you see?
+      </label>
+      <select
+        id="symptom-select"
+        class="w-full px-4 py-3 border-2 border-sage-300 rounded-lg focus:outline-none focus:border-sage-500 focus:ring-2 focus:ring-sage-200"
+      >
+        <option value="">Choose a symptom...</option>
+        <option value="Yellow Leaves">Yellow Leaves</option>
+        <option value="Brown Leaf Tips">Brown Tips</option>
+        <option value="Wilting">Wilting</option>
+        <option value="Leaf Spots">Spots on Leaves</option>
+        <option value="Pests">Visible Pests or Bugs</option>
+      </select>
+    </div>
+
+    <div id="step-3" class="quiz-step hidden mt-6">
+      <label class="block text-lg font-semibold text-gray-800 mb-3">
+        Step 3: How does the soil feel?
+      </label>
+      <select
+        id="soil-select"
+        class="w-full px-4 py-3 border-2 border-sage-300 rounded-lg focus:outline-none focus:border-sage-500 focus:ring-2 focus:ring-sage-200"
+      >
+        <option value="">Choose soil condition...</option>
+        <option value="dry">Dry or barely moist</option>
+        <option value="damp">Damp but not soggy</option>
+        <option value="soaked">Very wet or waterlogged</option>
+      </select>
+    </div>
+
+    <button
+      id="diagnose-btn"
+      class="mt-8 w-full bg-sage-500 hover:bg-sage-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hidden"
+    >
+      Get Diagnosis
+    </button>
+  </div>
+
+  <div id="diagnosis-result" class="hidden mt-8">
+    <div class="bg-sage-50 border-2 border-sage-300 rounded-xl p-6">
+      <h3 class="text-2xl font-bold text-sage-700 mb-4 flex items-center gap-2">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        Diagnosis
+      </h3>
+      <div id="diagnosis-content"></div>
+      <button
+        id="reset-quiz"
+        class="mt-6 text-sage-600 hover:text-sage-700 font-semibold underline"
+      >
+        Diagnose Another Plant
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let searchIndex: any[] = [];
+  let selectedPlant: any = null;
+
+  async function loadSearchIndex() {
+    try {
+      const response = await fetch('/data/search_index.json');
+      searchIndex = await response.json();
+    } catch (error) {
+      console.error('Failed to load search index:', error);
+    }
+  }
+
+  const quizPlantSearch = document.getElementById('quiz-plant-search') as HTMLInputElement;
+  const quizSearchResults = document.getElementById('quiz-search-results') as HTMLDivElement;
+  const selectedPlantDiv = document.getElementById('selected-plant') as HTMLDivElement;
+  const step2 = document.getElementById('step-2') as HTMLDivElement;
+  const step3 = document.getElementById('step-3') as HTMLDivElement;
+  const symptomSelect = document.getElementById('symptom-select') as HTMLSelectElement;
+  const soilSelect = document.getElementById('soil-select') as HTMLSelectElement;
+  const diagnoseBtn = document.getElementById('diagnose-btn') as HTMLButtonElement;
+  const diagnosisResult = document.getElementById('diagnosis-result') as HTMLDivElement;
+  const resetQuiz = document.getElementById('reset-quiz') as HTMLButtonElement;
+
+  function performQuizSearch(query: string) {
+    if (!query.trim()) {
+      quizSearchResults.classList.add('hidden');
+      return;
+    }
+
+    const lowercaseQuery = query.toLowerCase();
+    const results = searchIndex
+      .filter(plant =>
+        plant.common_name.toLowerCase().includes(lowercaseQuery) ||
+        plant.scientific_name.toLowerCase().includes(lowercaseQuery)
+      )
+      .slice(0, 5);
+
+    if (results.length === 0) {
+      quizSearchResults.innerHTML = '<div class="p-3 text-gray-500 text-center text-sm">No plants found</div>';
+      quizSearchResults.classList.remove('hidden');
+      return;
+    }
+
+    quizSearchResults.innerHTML = results
+      .map(plant => `
+        <button
+          type="button"
+          data-plant-id="${plant.id}"
+          data-plant-name="${plant.common_name}"
+          data-plant-scientific="${plant.scientific_name}"
+          data-plant-thumbnail="${plant.thumbnail}"
+          class="quiz-plant-option w-full flex items-center gap-3 p-3 hover:bg-sage-50 transition-colors border-b border-sage-100 last:border-b-0 text-left"
+        >
+          <img
+            src="${plant.thumbnail}"
+            alt="${plant.common_name}"
+            class="w-10 h-10 object-cover rounded-lg"
+            loading="lazy"
+          />
+          <div class="flex-1">
+            <div class="font-medium text-gray-900 text-sm">${plant.common_name}</div>
+            <div class="text-xs text-gray-500 italic">${plant.scientific_name}</div>
+          </div>
+        </button>
+      `)
+      .join('');
+
+    quizSearchResults.classList.remove('hidden');
+
+    document.querySelectorAll('.quiz-plant-option').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget as HTMLButtonElement;
+        selectedPlant = {
+          id: target.dataset.plantId,
+          name: target.dataset.plantName,
+          scientific: target.dataset.plantScientific,
+          thumbnail: target.dataset.plantThumbnail
+        };
+
+        (document.getElementById('selected-plant-img') as HTMLImageElement).src = selectedPlant.thumbnail;
+        (document.getElementById('selected-plant-name') as HTMLDivElement).textContent = selectedPlant.name;
+        (document.getElementById('selected-plant-scientific') as HTMLDivElement).textContent = selectedPlant.scientific;
+
+        selectedPlantDiv.classList.remove('hidden');
+        quizSearchResults.classList.add('hidden');
+        quizPlantSearch.value = '';
+        step2.classList.remove('hidden');
+      });
+    });
+  }
+
+  let debounceTimer: ReturnType<typeof setTimeout>;
+  quizPlantSearch?.addEventListener('input', (e) => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      performQuizSearch((e.target as HTMLInputElement).value);
+    }, 200);
+  });
+
+  symptomSelect?.addEventListener('change', () => {
+    if (symptomSelect.value) {
+      step3.classList.remove('hidden');
+    }
+  });
+
+  soilSelect?.addEventListener('change', () => {
+    if (soilSelect.value) {
+      diagnoseBtn.classList.remove('hidden');
+    }
+  });
+
+  diagnoseBtn?.addEventListener('click', async () => {
+    if (!selectedPlant || !symptomSelect.value || !soilSelect.value) return;
+
+    try {
+      const response = await fetch(`/data/${selectedPlant.id}.json`);
+      const plantData = await response.json();
+
+      const matchedProblem = plantData.troubleshooting.find(
+        (item: any) => item.problem === symptomSelect.value
+      );
+
+      if (matchedProblem) {
+        const soilCondition = soilSelect.value;
+        let additionalAdvice = '';
+
+        if (soilCondition === 'soaked' && symptomSelect.value !== 'Yellow Leaves') {
+          additionalAdvice = '<p class="mt-3 text-amber-700 bg-amber-50 p-3 rounded-lg"><strong>⚠️ Soil Alert:</strong> Your soil is waterlogged. This can lead to root rot. Reduce watering immediately and ensure proper drainage.</p>';
+        } else if (soilCondition === 'dry' && symptomSelect.value !== 'Brown Leaf Tips') {
+          additionalAdvice = '<p class="mt-3 text-blue-700 bg-blue-50 p-3 rounded-lg"><strong>💧 Soil Alert:</strong> Your soil is very dry. Consider increasing watering frequency slightly.</p>';
+        }
+
+        const diagnosisContent = document.getElementById('diagnosis-content');
+        if (diagnosisContent) {
+          diagnosisContent.innerHTML = `
+            <div class="mb-4">
+              <h4 class="font-bold text-lg text-gray-900 mb-2">${matchedProblem.problem}</h4>
+              <p class="text-gray-700 mb-3"><strong>Symptoms:</strong> ${matchedProblem.symptoms}</p>
+              <p class="text-gray-700"><strong>Solution:</strong> ${matchedProblem.solution}</p>
+              ${additionalAdvice}
+            </div>
+            <a href="/plant/${selectedPlant.id}" class="inline-block mt-4 text-sage-600 hover:text-sage-700 font-semibold underline">
+              View full ${selectedPlant.name} care guide →
+            </a>
+          `;
+        }
+
+        document.getElementById('quiz-container')?.classList.add('hidden');
+        diagnosisResult.classList.remove('hidden');
+      }
+    } catch (error) {
+      console.error('Failed to load plant data:', error);
+    }
+  });
+
+  resetQuiz?.addEventListener('click', () => {
+    selectedPlant = null;
+    quizPlantSearch.value = '';
+    symptomSelect.value = '';
+    soilSelect.value = '';
+    selectedPlantDiv.classList.add('hidden');
+    step2.classList.add('hidden');
+    step3.classList.add('hidden');
+    diagnoseBtn.classList.add('hidden');
+    diagnosisResult.classList.add('hidden');
+    document.getElementById('quiz-container')?.classList.remove('hidden');
+  });
+
+  loadSearchIndex();
+</script>

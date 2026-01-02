@@ -1,0 +1,54 @@
+{
+  "id": 1,
+  "common_name": "Monstera Deliciosa",
+  "scientific_name": "Monstera deliciosa",
+  "family": "Araceae",
+  "image": "https://images.pexels.com/photos/3125195/pexels-photo-3125195.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  "care": {
+    "watering": "Water when top 2-3 inches of soil are dry. Typically once per week in growing season, every 2 weeks in winter.",
+    "sunlight": "Bright, indirect light. Can tolerate some shade but growth will slow. Avoid direct sunlight which can scorch leaves.",
+    "pruning": "Prune in spring to control size and shape. Remove dead or damaged leaves anytime. Use clean, sharp scissors.",
+    "frequency": 7
+  },
+  "troubleshooting": [
+    {
+      "problem": "Yellow Leaves",
+      "symptoms": "Leaves turning yellow, especially lower leaves. Soil feels wet or waterlogged.",
+      "solution": "Overwatering is the likely cause. Allow soil to dry out between waterings. Check drainage holes are not blocked. Reduce watering frequency."
+    },
+    {
+      "problem": "Brown Leaf Tips",
+      "symptoms": "Leaf edges and tips turning brown and crispy. Soil feels dry.",
+      "solution": "Underwatering or low humidity. Increase watering frequency slightly. Mist leaves regularly or use a humidifier. Ensure pot has adequate drainage."
+    },
+    {
+      "problem": "Wilting",
+      "symptoms": "Leaves drooping and looking limp. Plant appears sad.",
+      "solution": "If soil is dry: Water thoroughly until water drains from bottom. If soil is wet: Root rot possible, reduce watering and check roots for mushiness."
+    },
+    {
+      "problem": "Leaf Spots",
+      "symptoms": "Dark or light spots appearing on leaves. May have yellow halos.",
+      "solution": "Could be fungal infection from overwatering or bacterial spot. Remove affected leaves, improve air circulation, avoid getting water on leaves, and reduce humidity."
+    },
+    {
+      "problem": "Pests",
+      "symptoms": "Visible insects, sticky residue, or webbing on leaves.",
+      "solution": "Check for spider mites, mealybugs, or scale. Wipe leaves with soapy water or neem oil solution. Isolate plant from others. Repeat treatment weekly."
+    }
+  ],
+  "faqs": [
+    {
+      "q": "How often should I water my Monstera?",
+      "a": "Water when the top 2-3 inches of soil feel dry to the touch. This is typically once per week during the growing season and every 2 weeks in winter."
+    },
+    {
+      "q": "Why are my Monstera leaves not splitting?",
+      "a": "Young leaves don't split. Mature plants need bright indirect light and proper care to develop fenestrations. Be patient and ensure adequate light."
+    },
+    {
+      "q": "Can Monstera survive in low light?",
+      "a": "Monstera can tolerate low light but will grow much slower and may not develop leaf splits. Bright, indirect light is ideal for healthy growth."
+    }
+  ]
+}

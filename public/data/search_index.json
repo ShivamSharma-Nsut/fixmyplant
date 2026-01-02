@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "common_name": "Monstera Deliciosa",
+    "scientific_name": "Monstera deliciosa",
+    "thumbnail": "https://images.pexels.com/photos/3125195/pexels-photo-3125195.jpeg?auto=compress&cs=tinysrgb&w=400"
+  },
+  {
+    "id": 2,
+    "common_name": "Snake Plant",
+    "scientific_name": "Sansevieria trifasciata",
+    "thumbnail": "https://images.pexels.com/photos/2123482/pexels-photo-2123482.jpeg?auto=compress&cs=tinysrgb&w=400"
+  },
+  {
+    "id": 3,
+    "common_name": "Pothos",
+    "scientific_name": "Epipremnum aureum",
+    "thumbnail": "https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=400"
+  }
+]

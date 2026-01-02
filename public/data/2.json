@@ -1,0 +1,54 @@
+{
+  "id": 2,
+  "common_name": "Snake Plant",
+  "scientific_name": "Sansevieria trifasciata",
+  "family": "Asparagaceae",
+  "image": "https://images.pexels.com/photos/2123482/pexels-photo-2123482.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  "care": {
+    "watering": "Water sparingly. Allow soil to dry completely between waterings. Every 2-3 weeks in summer, monthly in winter.",
+    "sunlight": "Very adaptable. Thrives in bright indirect light but tolerates low light and even some direct sun. Avoid prolonged direct afternoon sun.",
+    "pruning": "Minimal pruning needed. Remove dead or damaged leaves at the base with clean scissors. Can divide plant when repotting.",
+    "frequency": 14
+  },
+  "troubleshooting": [
+    {
+      "problem": "Yellow Leaves",
+      "symptoms": "Leaves turning soft and yellow, mushy at the base. Soil is constantly wet.",
+      "solution": "Severe overwatering and possible root rot. Stop watering immediately. Remove affected leaves. Repot in fresh, well-draining soil if roots are mushy. Water much less frequently."
+    },
+    {
+      "problem": "Brown Leaf Tips",
+      "symptoms": "Leaf tips turning brown and dry. Otherwise plant looks healthy.",
+      "solution": "Usually caused by fluoride or chlorine in tap water, or inconsistent watering. Use filtered or distilled water. Ensure soil dries completely between waterings."
+    },
+    {
+      "problem": "Wilting",
+      "symptoms": "Leaves becoming soft, curling, or drooping. Plant losing rigidity.",
+      "solution": "If soil is bone dry for extended period: Water thoroughly. If soil is wet: Root rot from overwatering. Check roots and repot if necessary."
+    },
+    {
+      "problem": "Leaf Spots",
+      "symptoms": "White, brown, or red-brown spots on leaves. May spread over time.",
+      "solution": "Likely fungal infection from overwatering or poor air circulation. Remove affected leaves, reduce watering, ensure good airflow, and avoid wetting leaves."
+    },
+    {
+      "problem": "Pests",
+      "symptoms": "Small insects, sticky residue, or visible bugs on leaves.",
+      "solution": "Snake plants rarely have pests. If present, wipe leaves with alcohol or insecticidal soap. Check for mealybugs or spider mites and treat accordingly."
+    }
+  ],
+  "faqs": [
+    {
+      "q": "How often should I water my Snake Plant?",
+      "a": "Water only when soil is completely dry, typically every 2-3 weeks in summer and monthly in winter. Snake plants are drought-tolerant and prefer underwatering to overwatering."
+    },
+    {
+      "q": "Can Snake Plants grow in low light?",
+      "a": "Yes! Snake Plants are one of the best low-light houseplants. They'll grow slower in low light but still thrive."
+    },
+    {
+      "q": "Why is my Snake Plant falling over?",
+      "a": "Overwatering causes root rot which makes leaves soft and unable to stand upright. Reduce watering and check if roots are healthy."
+    }
+  ]
+}

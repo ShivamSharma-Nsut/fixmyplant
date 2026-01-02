@@ -1,0 +1,54 @@
+{
+  "id": 3,
+  "common_name": "Pothos",
+  "scientific_name": "Epipremnum aureum",
+  "family": "Araceae",
+  "image": "https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  "care": {
+    "watering": "Water when top inch of soil feels dry. Usually once per week. Pothos prefers slightly moist soil but not waterlogged.",
+    "sunlight": "Bright, indirect light is ideal. Tolerates low light but growth slows and variegation may fade. Avoid direct sun which can scorch leaves.",
+    "pruning": "Prune regularly to encourage bushier growth. Cut just above a leaf node. Propagate cuttings in water. Remove yellow or dead leaves anytime.",
+    "frequency": 7
+  },
+  "troubleshooting": [
+    {
+      "problem": "Yellow Leaves",
+      "symptoms": "Older leaves turning yellow and dropping. Soil feels constantly wet.",
+      "solution": "Overwatering is the main cause. Let soil dry out more between waterings. Ensure pot has drainage holes. Yellow leaves can also indicate natural aging on older growth."
+    },
+    {
+      "problem": "Brown Leaf Tips",
+      "symptoms": "Leaf edges and tips turning brown and crispy. Leaves may curl.",
+      "solution": "Underwatering, low humidity, or chemical buildup from tap water. Water more consistently, increase humidity, or switch to filtered water. Trim brown tips with clean scissors."
+    },
+    {
+      "problem": "Wilting",
+      "symptoms": "Leaves drooping and looking sad. Vines losing their perk.",
+      "solution": "If soil is dry: Water thoroughly until it drains from bottom. If soil is wet: Overwatering or root rot. Reduce watering and check roots for health."
+    },
+    {
+      "problem": "Leaf Spots",
+      "symptoms": "Black, brown, or yellow spots on leaves. May be surrounded by yellow halos.",
+      "solution": "Bacterial or fungal leaf spot from overwatering or poor air circulation. Remove affected leaves, avoid wetting foliage, improve ventilation, and reduce watering."
+    },
+    {
+      "problem": "Pests",
+      "symptoms": "Sticky leaves, tiny bugs, or webbing visible on plant. Leaves may become damaged.",
+      "solution": "Common pests include spider mites, mealybugs, and scale. Spray with insecticidal soap or neem oil. Wipe leaves clean. Isolate from other plants and repeat treatment weekly."
+    }
+  ],
+  "faqs": [
+    {
+      "q": "How often should I water my Pothos?",
+      "a": "Water when the top inch of soil feels dry to the touch, typically once per week. Pothos is forgiving but prefers consistent moisture without being waterlogged."
+    },
+    {
+      "q": "Why is my Pothos losing its variegation?",
+      "a": "Insufficient light causes variegated Pothos to revert to solid green. Move to a brighter location with indirect light to maintain color patterns."
+    },
+    {
+      "q": "Can I grow Pothos in water permanently?",
+      "a": "Yes! Pothos can grow in water indefinitely. Change water weekly and add liquid fertilizer monthly for best results."
+    }
+  ]
+}

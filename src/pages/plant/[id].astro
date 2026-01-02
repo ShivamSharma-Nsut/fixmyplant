@@ -1,0 +1,264 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const fs = await import('node:fs/promises');
+  const path = await import('node:path');
+
+  try {
+    const searchIndexPath = path.join(process.cwd(), 'public', 'data', 'search_index.json');
+    const searchIndexContent = await fs.readFile(searchIndexPath, 'utf-8');
+    const searchIndex = JSON.parse(searchIndexContent);
+
+    return searchIndex.map((plant: any) => ({
+      params: { id: plant.id.toString() }
+    }));
+  } catch (error) {
+    console.error('Failed to load search index:', error);
+    return [
+      { params: { id: '1' } },
+      { params: { id: '2' } },
+      { params: { id: '3' } }
+    ];
+  }
+}
+
+const { id } = Astro.params;
+
+let plantData: any = null;
+
+try {
+  const fs = await import('node:fs/promises');
+  const path = await import('node:path');
+  const dataPath = path.join(process.cwd(), 'public', 'data', `${id}.json`);
+  const fileContent = await fs.readFile(dataPath, 'utf-8');
+  plantData = JSON.parse(fileContent);
+} catch (error) {
+  return Astro.redirect('/404');
+}
+
+if (!plantData) {
+  return Astro.redirect('/404');
+}
+---
+
+<Layout title={`${plantData.common_name} - Plant Doctor`} description={`Complete care guide for ${plantData.common_name} (${plantData.scientific_name}). Learn about watering, sunlight, and troubleshooting.`}>
+  <div class="min-h-screen bg-white">
+    <div class="bg-gradient-to-b from-sage-50 to-white">
+      <div class="max-w-6xl mx-auto px-4 py-8">
+        <a href="/" class="inline-flex items-center gap-2 text-sage-600 hover:text-sage-700 mb-6 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+          </svg>
+          Back to Home
+        </a>
+
+        <div class="grid md:grid-cols-2 gap-8 items-start mb-12">
+          <div>
+            <img
+              src={plantData.image}
+              alt={plantData.common_name}
+              class="w-full h-auto rounded-2xl shadow-2xl"
+              loading="eager"
+            />
+          </div>
+
+          <div class="flex flex-col justify-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-sage-700 mb-3">
+              {plantData.common_name}
+            </h1>
+            <p class="text-xl text-gray-600 italic mb-4">{plantData.scientific_name}</p>
+            <p class="text-gray-600 mb-6">
+              <span class="font-semibold">Family:</span> {plantData.family}
+            </p>
+
+            <div class="grid grid-cols-2 gap-4 mb-6">
+              <div class="bg-white border-2 border-sage-200 rounded-xl p-4 hover:border-sage-400 transition-colors">
+                <div class="flex items-center gap-3 mb-2">
+                  <svg class="w-6 h-6 text-sage-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                  </svg>
+                  <span class="font-semibold text-gray-900">Sunlight</span>
+                </div>
+                <p class="text-sm text-gray-600">{plantData.care.sunlight.split('.')[0]}</p>
+              </div>
+
+              <div class="bg-white border-2 border-sage-200 rounded-xl p-4 hover:border-sage-400 transition-colors">
+                <div class="flex items-center gap-3 mb-2">
+                  <svg class="w-6 h-6 text-sage-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+                  </svg>
+                  <span class="font-semibold text-gray-900">Watering</span>
+                </div>
+                <p class="text-sm text-gray-600">Every {plantData.care.frequency} days</p>
+              </div>
+            </div>
+
+            <button
+              id="generate-calendar"
+              class="bg-sage-500 hover:bg-sage-600 text-white font-semibold py-4 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+              Generate Watering Schedule
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 py-12">
+      <section class="mb-16">
+        <h2 class="text-3xl font-bold text-sage-700 mb-6 flex items-center gap-3">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          Care Guide
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="bg-sage-50 border border-sage-200 rounded-xl p-6">
+            <h3 class="font-bold text-xl text-gray-900 mb-3 flex items-center gap-2">
+              <svg class="w-6 h-6 text-sage-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+              </svg>
+              Watering
+            </h3>
+            <p class="text-gray-700" style="line-height: 1.6;">{plantData.care.watering}</p>
+          </div>
+
+          <div class="bg-sage-50 border border-sage-200 rounded-xl p-6">
+            <h3 class="font-bold text-xl text-gray-900 mb-3 flex items-center gap-2">
+              <svg class="w-6 h-6 text-sage-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+              </svg>
+              Sunlight
+            </h3>
+            <p class="text-gray-700" style="line-height: 1.6;">{plantData.care.sunlight}</p>
+          </div>
+
+          <div class="bg-sage-50 border border-sage-200 rounded-xl p-6 md:col-span-2">
+            <h3 class="font-bold text-xl text-gray-900 mb-3 flex items-center gap-2">
+              <svg class="w-6 h-6 text-sage-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"/>
+              </svg>
+              Pruning
+            </h3>
+            <p class="text-gray-700" style="line-height: 1.6;">{plantData.care.pruning}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-16">
+        <h2 class="text-3xl font-bold text-sage-700 mb-6 flex items-center gap-3">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+          </svg>
+          Troubleshooting Common Issues
+        </h2>
+
+        <div class="space-y-4">
+          {plantData.troubleshooting.map((issue: any, index: number) => (
+            <details class="bg-white border-2 border-sage-200 rounded-xl overflow-hidden hover:border-sage-400 transition-colors group">
+              <summary class="cursor-pointer p-6 font-semibold text-lg text-gray-900 flex items-center justify-between hover:bg-sage-50 transition-colors">
+                <span class="flex items-center gap-3">
+                  <span class="flex-shrink-0 w-8 h-8 bg-sage-100 text-sage-700 rounded-full flex items-center justify-center font-bold text-sm">
+                    {index + 1}
+                  </span>
+                  {issue.problem}
+                </span>
+                <svg class="w-5 h-5 text-sage-600 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </summary>
+              <div class="px-6 pb-6 pt-2 border-t border-sage-100">
+                <p class="text-gray-700 mb-3" style="line-height: 1.6;">
+                  <strong class="text-gray-900">Symptoms:</strong> {issue.symptoms}
+                </p>
+                <p class="text-gray-700" style="line-height: 1.6;">
+                  <strong class="text-gray-900">Solution:</strong> {issue.solution}
+                </p>
+              </div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section class="mb-16">
+        <h2 class="text-3xl font-bold text-sage-700 mb-6 flex items-center gap-3">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Frequently Asked Questions
+        </h2>
+
+        <div class="space-y-4">
+          {plantData.faqs.map((faq: any) => (
+            <details class="bg-white border-2 border-sage-200 rounded-xl overflow-hidden hover:border-sage-400 transition-colors group">
+              <summary class="cursor-pointer p-6 font-semibold text-lg text-gray-900 hover:bg-sage-50 transition-colors flex items-center justify-between">
+                {faq.q}
+                <svg class="w-5 h-5 text-sage-600 group-open:rotate-180 transition-transform flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </summary>
+              <div class="px-6 pb-6 pt-2 border-t border-sage-100">
+                <p class="text-gray-700" style="line-height: 1.6;">{faq.a}</p>
+              </div>
+            </details>
+          ))}
+        </div>
+      </section>
+    </div>
+
+    <footer class="bg-sage-700 text-white py-8 px-4">
+      <div class="max-w-6xl mx-auto text-center">
+        <p>&copy; 2026 Plant Doctor. Expert care for every plant.</p>
+      </div>
+    </footer>
+  </div>
+</Layout>
+
+<script define:vars={{ plantData }}>
+  const generateCalendarBtn = document.getElementById('generate-calendar');
+
+  generateCalendarBtn?.addEventListener('click', () => {
+    const startDate = new Date();
+    const events = [];
+
+    for (let i = 0; i < 12; i++) {
+      const eventDate = new Date(startDate);
+      eventDate.setDate(eventDate.getDate() + (i * plantData.care.frequency));
+
+      const dtstart = eventDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+      const dtend = new Date(eventDate.getTime() + 30 * 60000).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+
+      events.push(`BEGIN:VEVENT
+DTSTART:${dtstart}
+DTEND:${dtend}
+SUMMARY:Water ${plantData.common_name}
+DESCRIPTION:Time to water your ${plantData.common_name}. ${plantData.care.watering}
+STATUS:CONFIRMED
+SEQUENCE:0
+END:VEVENT`);
+    }
+
+    const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Plant Doctor//Watering Schedule//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:${plantData.common_name} Watering Schedule
+X-WR-TIMEZONE:UTC
+${events.join('\n')}
+END:VCALENDAR`;
+
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${plantData.common_name.toLowerCase().replace(/\s+/g, '-')}-watering-schedule.ics`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+</script>
